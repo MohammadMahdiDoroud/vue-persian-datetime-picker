@@ -236,7 +236,7 @@
     right: 3px;
     width: 6px;
     height: 6px;
-    background-color: red;
+    background-color: #ff3145;
     color: #fff;
     border-radius: 50%;
     font-size: 9px;
@@ -249,7 +249,7 @@
 }
 
 .#{$prefix}passed {
-  background-color: blue;
+  background-color: #4c79d1;
 }
 
 .#{$prefix}day-effect {
