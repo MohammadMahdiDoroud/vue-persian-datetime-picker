@@ -184,7 +184,7 @@
                     <transition name="slideX" :class="directionClassDate">
                       <div :key="date.xMonth()">
                         <div
-                          v-for="(m, mi) in month"
+                          v-for="(m, mi) in monthToShow"
                           :key="mi"
                           class="clearfix"
                         >
@@ -212,6 +212,11 @@
                                 <span
                                   :class="[prefix('day-text')]"
                                   v-text="convertToLocaleNumber(day.formatted)"
+                                />
+                                <span 
+                                  v-if="day.badge"
+                                  :class="[prefix('day-badge'), {'vpd-passed': day.ispassedDate }]" 
+                                  v-text="day.badge" 
                                 />
                               </slot>
                             </template>
@@ -796,12 +801,23 @@ export default {
      * @example <date-picker compact-time />
      * @version 2.4.0
      */
-    compactTime: { type: Boolean, default: false }
+    compactTime: { type: Boolean, default: false },
+
+    /** 
+     * Array for data of months for using in badge 
+     * @type Array
+     * @default []
+     * @expample <date-picker :dataMonthArray="" />
+     * @version 2.4.1
+    */
+    dataMonthArray: {}
   },
   data() {
     let defaultLocale = this.locale.split(',')[0]
     let coreModule = new CoreModule(defaultLocale, this.localeConfig)
     return {
+      isPassedDate: false,
+      monthToShow: [],
       core: coreModule,
       now: coreModule.moment(),
       date: {},
@@ -882,7 +898,9 @@ export default {
             formatted: '',
             selected: false,
             disabled: false,
-            attributes: {}
+            attributes: {},
+            badge: null,
+            ispassedDate: false
           }
           if (!day) return data
           let selected = false
@@ -890,6 +908,10 @@ export default {
             selected = Math.abs(selectedStart.diff(day, 'hours')) < 20
             selectedFound = selected
           }
+          
+          if(selectedStart.diff(day, 'hours') <= 0) data.ispassedDate = true 
+
+          // console.log('day',day, selectedStart.diff(day) )
           let dayMoment = this.core.moment(day)
           data.formatted = dayMoment.xDate()
           data.selected = selected
@@ -1132,6 +1154,7 @@ export default {
       this.setDirection('directionClass', val, old)
     },
     date(val, old) {
+      this.fillWithBadge()
       this.setDirection('directionClassDate', val, old)
       if (this.isLower(this.date)) this.date = this.minDate.clone()
       if (this.isMore(this.date)) this.date = this.maxDate.clone()
@@ -1227,11 +1250,38 @@ export default {
       e = e || event
       if (e.keyCode === 9 && this.visible) this.visible = false
     })
+
+
+
+   
+    
   },
   destroyed() {
     window.clearInterval(this.updateNowInterval)
   },
   methods: {
+    fillWithBadge() {
+      // if(this.dataMonthArray && this.dataMonthArray.length>0) {
+        const dataForDaysOfMonth = [1,null,null,null,null,null,null,null,null,25,null,null,4,null,null,null,null,5,null,null,null,null,null,null,null,null,null,null,null,10,]
+        
+        const monthToShow = this.month.map((week, wi) => {
+          week.map((d,i) => {
+            if(d.formatted) {
+              d.badge = dataForDaysOfMonth[d.formatted - 1]
+              return d
+            } else {
+              return d
+            }
+          })
+    
+          return week
+        })
+    
+        this.monthToShow = monthToShow
+      // } else {
+      //   this.monthToShow = this.month
+      // }
+    },
     nextStep() {
       let step = this.step + 1
       if (this.compactTime && this.type === 'datetime') step += 1
@@ -1270,11 +1320,22 @@ export default {
     },
     nextMonth() {
       this.date = this.date.clone().xAdd(1, 'month')
+
+      const startDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 1}/1`
+      const endDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 2}/1`
+
+      this.$emit('getDataOfDay', startDate, endDate)
     },
     prevMonth() {
       this.date = this.date.clone().xAdd(-1, 'month')
+
+      const startDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 1}/1`
+      const endDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 2}/1`
+
+      this.$emit('getDataOfDay', startDate, endDate)
     },
     selectDay(day) {
+      console.log(day)
       if (!day.date || day.disabled) return
       let d = this.core.moment(day.date)
       d.set({
@@ -1282,6 +1343,7 @@ export default {
         minute: this.time.minute(),
         second: 0
       })
+        console.log(d.clone())
       this.date = d.clone()
       this.selectedDate = d.clone()
       this.time = d.clone()
@@ -1654,3 +1716,4 @@ export default {
   }
 }
 </script>
+
