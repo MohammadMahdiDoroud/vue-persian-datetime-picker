@@ -1159,9 +1159,12 @@ export default {
       if (this.isLower(this.date)) this.date = this.minDate.clone()
       if (this.isMore(this.date)) this.date = this.maxDate.clone()
     },
-    dataMonthArray(val, old) {
-      // console.log({val, old})
-      console.log('month is changed')
+    dataMonthArray: {
+        handler() {
+          console.log('hello im cahnging')
+        },
+        deep: true,
+        immediate: true
     },
     time: {
       handler(val, old) {
