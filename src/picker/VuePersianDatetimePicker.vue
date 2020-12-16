@@ -1159,12 +1159,14 @@ export default {
       if (this.isLower(this.date)) this.date = this.minDate.clone()
       if (this.isMore(this.date)) this.date = this.maxDate.clone()
     },
-    dataMonthArray: {
-        handler() {
-          console.log('hello im cahnging')
-        },
-        deep: true,
-        immediate: true
+    $props: {
+      handler(props, oldProps) {
+        if (props.dataMonthArray !== oldProps.dataMonthArray) {
+          console.log('finaly im changing')
+        }
+      },
+      deep: true,
+      immediate: true
     },
     time: {
       handler(val, old) {
