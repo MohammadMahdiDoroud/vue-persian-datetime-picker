@@ -891,6 +891,7 @@ export default {
       let selectedStart = this.selectedDate.clone().set({ h: 12, m: 0 })
       let min = this.minDate ? this.minDate.clone().startOf('day') : -Infinity
       let max = this.maxDate ? this.maxDate.clone().endOf('day') : Infinity
+      const now = this.core.moment()
       return this.core.getWeekArray(this.date.clone()).map(weekItem => {
         return weekItem.map(day => {
           let data = {
@@ -909,9 +910,8 @@ export default {
             selectedFound = selected
           }
           
-          if(selectedStart.diff(day, 'hours') <= 0) data.ispassedDate = true 
+          if(now.diff(day, 'hours') <= 0) data.ispassedDate = true 
 
-          // console.log('day',day, selectedStart.diff(day) )
           let dayMoment = this.core.moment(day)
           data.formatted = dayMoment.xDate()
           data.selected = selected
@@ -1261,8 +1261,8 @@ export default {
   },
   methods: {
     fillWithBadge() {
-      // if(this.dataMonthArray && this.dataMonthArray.length>0) {
-        const dataForDaysOfMonth = [1,null,null,null,null,null,null,null,null,25,null,null,4,null,null,null,null,5,null,null,null,null,null,null,null,null,null,null,null,10,]
+      if(this.dataMonthArray && this.dataMonthArray.length>0) {
+        const dataForDaysOfMonth = this.dataMonthArray
         
         const monthToShow = this.month.map((week, wi) => {
           week.map((d,i) => {
@@ -1278,9 +1278,9 @@ export default {
         })
     
         this.monthToShow = monthToShow
-      // } else {
-      //   this.monthToShow = this.month
-      // }
+      } else {
+        this.monthToShow = this.month
+      }
     },
     nextStep() {
       let step = this.step + 1
@@ -1335,7 +1335,6 @@ export default {
       this.$emit('getDataOfDay', startDate, endDate)
     },
     selectDay(day) {
-      console.log(day)
       if (!day.date || day.disabled) return
       let d = this.core.moment(day.date)
       d.set({
@@ -1343,7 +1342,6 @@ export default {
         minute: this.time.minute(),
         second: 0
       })
-        console.log(d.clone())
       this.date = d.clone()
       this.selectedDate = d.clone()
       this.time = d.clone()
