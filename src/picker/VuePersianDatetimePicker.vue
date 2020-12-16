@@ -1265,7 +1265,7 @@ export default {
     fillWithBadge() {
       if(this.dataMonthArray && this.dataMonthArray.length>0) {
         const dataForDaysOfMonth = this.dataMonthArray
-        
+
         const monthToShow = this.month.map((week, wi) => {
           week.map((d,i) => {
             if(d.formatted) {
@@ -1320,23 +1320,29 @@ export default {
       if (!e) this.timeData.transitionSpeed = 300
       this.classFastCounter = e ? 'fast-updating' : ''
     },
-    async nextMonth() {
-      this.date = this.date.clone().xAdd(1, 'month')
+    nextMonth() {
+      const date = this.date.clone().xAdd(1, 'month')
 
-      const startDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 1}/1`
-      const endDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 2}/1`
+      const startDate = `${date.clone().xYear()}/${date.clone().xMonth() + 1}/1`
+      const endDate = date.clone().xMonth() === 11 ?
+        `${date.clone().xYear() + 1}/1/1` :
+        `${date.clone().xYear()}/${date.clone().xMonth() + 2}/1`
+        
+      this.$emit('getDataOfDay', startDate, endDate)
 
-      await this.$emit('getDataOfDay', startDate, endDate)
-      this.fillWithBadge()
+      this.date = date
     },
-    async prevMonth() {
-      this.date = this.date.clone().xAdd(-1, 'month')
+    prevMonth() {
+      const date = this.date.clone().xAdd(-1, 'month')
 
-      const startDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 1}/1`
-      const endDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 2}/1`
+      const startDate = `${date.clone().xYear()}/${date.clone().xMonth() + 1}/1`
+      const endDate = date.clone().xMonth() === 11 ?
+        `${date.clone().xYear() + 1}/1/1` :
+        `${date.clone().xYear()}/${date.clone().xMonth() + 2}/1`
 
-      await this.$emit('getDataOfDay', startDate, endDate)
-      this.fillWithBadge()
+      this.$emit('getDataOfDay', startDate, endDate)
+
+      this.date = date
     },
     selectDay(day) {
       if (!day.date || day.disabled) return
