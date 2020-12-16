@@ -184,7 +184,7 @@
                     <transition name="slideX" :class="directionClassDate">
                       <div :key="date.xMonth()">
                         <div
-                          v-for="(m, mi) in monthToShow"
+                          v-for="(m, mi) in month"
                           :key="mi"
                           class="clearfix"
                         >
@@ -810,14 +810,13 @@ export default {
      * @expample <date-picker :dataMonthArray="" />
      * @version 2.4.1
     */
-    dataMonthArray: {}
+    dataMonthObject: {}
   },
   data() {
     let defaultLocale = this.locale.split(',')[0]
     let coreModule = new CoreModule(defaultLocale, this.localeConfig)
     return {
       isPassedDate: false,
-      monthToShow: [],
       core: coreModule,
       now: coreModule.moment(),
       date: {},
@@ -903,6 +902,8 @@ export default {
             badge: null,
             ispassedDate: false
           }
+
+
           if (!day) return data
           let selected = false
           if (!selectedFound) {
@@ -914,6 +915,7 @@ export default {
 
           let dayMoment = this.core.moment(day)
           data.formatted = dayMoment.xDate()
+          data.badge = this.dataMonthObject[data.formatted] ? this.dataMonthObject[data.formatted] : null
           data.selected = selected
           data.disabled =
             (this.minDate && dayMoment.clone().startOf('day') < min) ||
@@ -1158,7 +1160,6 @@ export default {
       if(val.clone().xMonth() !== old.clone().xMonth()) this.getDataOfDay()
       if (this.isLower(this.date)) this.date = this.minDate.clone()
       if (this.isMore(this.date)) this.date = this.maxDate.clone()
-      this.fillWithBadge()
     },
     time: {
       handler(val, old) {
@@ -1251,38 +1252,11 @@ export default {
       e = e || event
       if (e.keyCode === 9 && this.visible) this.visible = false
     })
-
-    this.getDataOfDay()
-
-   
-    
   },
   destroyed() {
     window.clearInterval(this.updateNowInterval)
   },
   methods: {
-    fillWithBadge() {
-      if(this.dataMonthArray && this.dataMonthArray.length>0) {
-        const dataForDaysOfMonth = this.dataMonthArray
-
-        const monthToShow = this.month.map((week, wi) => {
-          week.map((d,i) => {
-            if(d.formatted) {
-              d.badge = dataForDaysOfMonth[d.formatted - 1]
-              return d
-            } else {
-              return d
-            }
-          })
-    
-          return week
-        })
-    
-        this.monthToShow = monthToShow
-      } else {
-        this.monthToShow = this.month
-      }
-    },
     nextStep() {
       let step = this.step + 1
       if (this.compactTime && this.type === 'datetime') step += 1

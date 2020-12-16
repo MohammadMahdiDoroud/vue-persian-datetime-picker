@@ -8,7 +8,7 @@
     </h5>
 
     <card title="Simple example">
-      <date-picker v-model="date" :clearable="true" />
+      <date-picker v-model="date" :clearable="true" :dataMonthObject="{'1': 50, '20': 40}" />
       <br />
       <date-picker v-model="datetime" type="datetime" />
       <br />
