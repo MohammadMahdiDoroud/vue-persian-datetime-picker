@@ -1154,19 +1154,11 @@ export default {
       this.setDirection('directionClass', val, old)
     },
     date(val, old) {
-      this.fillWithBadge()
+      // this.getDataOfDay()
       this.setDirection('directionClassDate', val, old)
+      this.fillWithBadge()
       if (this.isLower(this.date)) this.date = this.minDate.clone()
       if (this.isMore(this.date)) this.date = this.maxDate.clone()
-    },
-    $props: {
-      handler(props, oldProps) {
-        if (props.dataMonthArray !== oldProps.dataMonthArray) {
-          console.log('finaly im changing')
-        }
-      },
-      deep: true,
-      immediate: true
     },
     time: {
       handler(val, old) {
@@ -1350,6 +1342,16 @@ export default {
       this.$emit('getDataOfDay', startDate, endDate)
 
       this.date = date
+    },
+    getDataOfDay() {
+      const date = this.date.clone().xAdd(-1, 'month')
+
+      const startDate = `${date.clone().xYear()}/${date.clone().xMonth() + 1}/1`
+      const endDate = date.clone().xMonth() === 11 ?
+        `${date.clone().xYear() + 1}/1/1` :
+        `${date.clone().xYear()}/${date.clone().xMonth() + 2}/1`
+
+      this.$emit('getDataOfDay', startDate, endDate)
     },
     selectDay(day) {
       if (!day.date || day.disabled) return
