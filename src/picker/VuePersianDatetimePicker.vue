@@ -1159,6 +1159,10 @@ export default {
       if (this.isLower(this.date)) this.date = this.minDate.clone()
       if (this.isMore(this.date)) this.date = this.maxDate.clone()
     },
+    dataMonthArray(val, old) {
+      // console.log({val, old})
+      console.log('month is changed')
+    },
     time: {
       handler(val, old) {
         if (this.hasStep('t') && this.roundMinute) {
@@ -1233,10 +1237,8 @@ export default {
       let addEvent = (el, type, handler) => {
         if (el.attachEvent) el.attachEvent('on' + type, handler)
         else el.addEventListener(type, handler)
-        console.log('addEvent')
       }
       let live = (selector, event, callback, context) => {
-        console.log('live')
         addEvent(context || document, event, function(e) {
           let found,
             el = e.target || e.srcElement
