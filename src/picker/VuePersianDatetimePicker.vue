@@ -1233,8 +1233,10 @@ export default {
       let addEvent = (el, type, handler) => {
         if (el.attachEvent) el.attachEvent('on' + type, handler)
         else el.addEventListener(type, handler)
+        console.log('addEvent')
       }
       let live = (selector, event, callback, context) => {
+        console.log('live')
         addEvent(context || document, event, function(e) {
           let found,
             el = e.target || e.srcElement
@@ -1318,21 +1320,23 @@ export default {
       if (!e) this.timeData.transitionSpeed = 300
       this.classFastCounter = e ? 'fast-updating' : ''
     },
-    nextMonth() {
+    async nextMonth() {
       this.date = this.date.clone().xAdd(1, 'month')
 
       const startDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 1}/1`
       const endDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 2}/1`
 
-      this.$emit('getDataOfDay', startDate, endDate)
+      await this.$emit('getDataOfDay', startDate, endDate)
+      this.fillWithBadge()
     },
-    prevMonth() {
+    async prevMonth() {
       this.date = this.date.clone().xAdd(-1, 'month')
 
       const startDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 1}/1`
       const endDate = `${this.date.clone().xYear()}/${this.date.clone().xMonth() + 2}/1`
 
-      this.$emit('getDataOfDay', startDate, endDate)
+      await this.$emit('getDataOfDay', startDate, endDate)
+      this.fillWithBadge()
     },
     selectDay(day) {
       if (!day.date || day.disabled) return
