@@ -1300,6 +1300,8 @@ export default {
       const endDate = date.clone().xMonth() === 11 ?
         `${date.clone().xYear() + 1}/1/1` :
         `${date.clone().xYear()}/${date.clone().xMonth() + 2}/1`
+
+      this.$emit('getDataOfDay', startDate, endDate)
   
       this.date = date
     },
@@ -1311,18 +1313,20 @@ export default {
         `${date.clone().xYear() + 1}/1/1` :
         `${date.clone().xYear()}/${date.clone().xMonth() + 2}/1`
 
+      this.$emit('getDataOfDay', startDate, endDate)
+
       this.date = date
     },
-    getDataOfDay() {
-      const date = this.date.clone()
+    // getDataOfDay() {
+    //   const date = this.date.clone()
 
-      const startDate = `${date.clone().xYear()}/${date.clone().xMonth() + 1}/1`
-      const endDate = date.clone().xMonth() === 11 ?
-        `${date.clone().xYear() + 1}/1/1` :
-        `${date.clone().xYear()}/${date.clone().xMonth() + 2}/1`
+    //   const startDate = `${date.clone().xYear()}/${date.clone().xMonth() + 1}/1`
+    //   const endDate = date.clone().xMonth() === 11 ?
+    //     `${date.clone().xYear() + 1}/1/1` :
+    //     `${date.clone().xYear()}/${date.clone().xMonth() + 2}/1`
 
-      this.$emit('getDataOfDay', startDate, endDate)
-    },
+    //   this.$emit('getDataOfDay', startDate, endDate)
+    // },
     selectDay(day) {
       if (!day.date || day.disabled) return
       let d = this.core.moment(day.date)
