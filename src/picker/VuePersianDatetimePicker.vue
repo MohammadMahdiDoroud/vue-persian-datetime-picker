@@ -1157,7 +1157,7 @@ export default {
     },
     date(val, old) {
       this.setDirection('directionClassDate', val, old)
-      if(val.clone().xMonth() !== old.clone().xMonth()) this.getDataOfDay()
+      // if(val.clone().xMonth() !== old.clone().xMonth()) this.getDataOfDay()
       if (this.isLower(this.date)) this.date = this.minDate.clone()
       if (this.isMore(this.date)) this.date = this.maxDate.clone()
     },
