@@ -915,7 +915,7 @@ export default {
 
           let dayMoment = this.core.moment(day)
           data.formatted = dayMoment.xDate()
-          data.badge = this.dataMonthObject[data.formatted] ? this.dataMonthObject[data.formatted].count : null
+          data.badge = this.dataMonthObject[data.formatted] ? this.dataMonthObject[data.formatted] : null
           data.selected = selected
           data.disabled =
             (this.minDate && dayMoment.clone().startOf('day') < min) ||
