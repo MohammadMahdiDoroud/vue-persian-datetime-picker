@@ -236,20 +236,53 @@
     right: 3px;
     width: 6px;
     height: 6px;
-    background-color: #ff3145;
+    background-color: #FD9E77;
     color: #fff;
     border-radius: 50%;
-    font-size: 9px;
+    font-size: 10px;
     display: flex;
     z-index: 10000;
     align-items: center;
     justify-content: center;
     padding: 7px;
   }
+
+  &-has-badge {
+    z-index: 0;
+
+    &::after {
+      content: '';
+      z-index: -1;
+      position: absolute;
+      top: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 1px solid rgba(248, 164, 130, 0.53);
+      background: rgba(248, 164, 130, 0.28);
+      border-radius: 5px;
+      width: 25px;
+      height: 25px;
+    }
+  }
+
+  &-has-badge-passed {
+    &::after {
+      border: 1px solid rgba(68, 151, 179, 0.47);
+      background: #D8F5FF;
+    }
+  }
+
+  &.selected, &:hover {
+    .vpd-day-has-badge {
+      &::after {
+        display: none;
+      }
+    }
+  }
 }
 
 .#{$prefix}passed {
-  background-color: #4c79d1;
+  background-color: #4496B2;
 }
 
 .#{$prefix}day-effect {

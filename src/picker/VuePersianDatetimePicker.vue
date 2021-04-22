@@ -210,7 +210,7 @@
                                   :style="{ 'background-color': color }"
                                 />
                                 <span
-                                  :class="[prefix('day-text')]"
+                                  :class="[prefix('day-text'), day.badge && prefix('day-has-badge'), day.badge && day.ispassedDate && prefix('day-has-badge-passed') ]"
                                   v-text="convertToLocaleNumber(day.formatted)"
                                 />
                                 <span 
